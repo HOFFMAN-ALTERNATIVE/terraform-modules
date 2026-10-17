@@ -45,6 +45,17 @@ variable "flow_logs_retention_days" {
   default     = 30
 }
 
+variable "flow_logs_kms_key_arn" {
+  description = "Optional KMS key ARN to encrypt the flow-log group. The key policy must allow the CloudWatch Logs service principal. null = CloudWatch-managed encryption."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.flow_logs_kms_key_arn == null || can(regex("^arn:aws[a-z-]*:kms:", var.flow_logs_kms_key_arn))
+    error_message = "flow_logs_kms_key_arn must be a KMS key ARN."
+  }
+}
+
 variable "tags" {
   description = "Tags applied to every resource."
   type        = map(string)

@@ -1,0 +1,11 @@
+# Checks skipped on purpose. Each one is a cost or scope decision for the caller, documented in SECURITY.md.
+framework:
+  - terraform
+skip-check:
+  - CKV_AWS_18   # S3 access logging needs a separate log bucket; callers wire it to their own logging account
+  - CKV_AWS_144  # cross-region replication doubles storage cost; not a sane default for every bucket
+  - CKV2_AWS_62  # event notifications are application-specific
+  - CKV_AWS_300  # false positive: the first lifecycle rule always aborts incomplete uploads after 7 days (tested)
+  - CKV_AWS_338  # flow-log retention is a variable (default 30 days); one year is a compliance choice, not a default
+  - CKV_AWS_158  # KMS for the flow-log group is opt-in via flow_logs_kms_key_arn (key policy is the caller's)
+  - CKV_AWS_394  # first az_count names in order; new AZs sort after existing ones. Pin zones yourself if an outage-driven shift matters

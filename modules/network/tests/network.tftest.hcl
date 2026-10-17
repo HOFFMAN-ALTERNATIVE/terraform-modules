@@ -142,3 +142,22 @@ run "rejects_unknown_nat_mode" {
   }
   expect_failures = [var.nat_mode]
 }
+
+run "flow_log_group_uses_customer_kms_key_when_given" {
+  command = plan
+  variables {
+    flow_logs_kms_key_arn = "arn:aws:kms:eu-central-1:123456789012:key/11111111-2222-3333-4444-555555555555"
+  }
+  assert {
+    condition     = aws_cloudwatch_log_group.flow[0].kms_key_id == "arn:aws:kms:eu-central-1:123456789012:key/11111111-2222-3333-4444-555555555555"
+    error_message = "flow-log group must use the supplied KMS key"
+  }
+}
+
+run "rejects_non_kms_arn_for_flow_logs" {
+  command = plan
+  variables {
+    flow_logs_kms_key_arn = "alias/not-an-arn"
+  }
+  expect_failures = [var.flow_logs_kms_key_arn]
+}

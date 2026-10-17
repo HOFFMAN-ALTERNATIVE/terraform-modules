@@ -36,6 +36,17 @@ jobs:
           tflint --init
           tflint --recursive --format compact
 
+  checkov:
+    name: checkov (IaC security scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install checkov==3.3.29
+      - run: checkov -d modules --config-file .checkov.yaml --compact --quiet
+
   test:
     name: validate + test · ${{ matrix.dir }} · tf ${{ matrix.tf }}
     runs-on: ubuntu-latest
