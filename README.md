@@ -84,9 +84,12 @@ TLS-only bucket policy statements, lifecycle rules following inputs, and `expect
 
 ## Design decisions
 
-- Mocks over sandboxes. `mock_provider` gives deterministic, credential-free tests; real-cloud checks belong in a separate pipeline with its own approval.
-- NAT cost is explicit. NAT gateways are the classic surprise bill, so `nat_mode` is `none`, `single` or `per_az` and the example derives it from the environment.
-- `count` with stable indices and a documented CIDR layout, so plans stay readable in review.
+- [ADR 0001](docs/adr/0001-mocked-providers-for-tests.md): mocked providers instead of a sandbox
+  account. Deterministic, credential-free tests; real-cloud checks belong in a separate gated pipeline.
+- [ADR 0002](docs/adr/0002-explicit-nat-mode.md): NAT cost is explicit. `nat_mode` is `none`,
+  `single` or `per_az`, and the example derives it from the environment.
+- [ADR 0003](docs/adr/0003-count-with-deterministic-cidrs.md): `count` with a fixed CIDR layout,
+  so plans stay readable in review. The cost is replacement when AZs or `subnet_newbits` change.
 
 ## Skipped Checkov checks
 
